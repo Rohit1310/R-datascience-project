@@ -1,0 +1,100 @@
+---
+title: "EDA-Capstone(Modeling)"
+author: "Rohit Jain"
+date: "February 22, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE, cache=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+The goal of this project is just to display working with the data and that I am on track to create me prediction algorithm. 
+
+## Table of Content
+
+1. Demonstrating data download and loading.
+2. Summary statistics about the data sets.
+3. Basic Plots.
+4. Plans for creating a prediction algorithm.
+
+
+## 1. Demonstrating data download and loading:
+
+I have downloaded the data for the course page to my working directorty and unzip the same, thereafter using the below self written function in a supported R file. I have loaded the data in the working environment with varibale names as follows:
+```{r, echo= FALSE, warning=FALSE, cache=TRUE}
+library(knitr)
+temp <- as.data.frame(matrix(data = c("NEWS","newsdt","BLOGS","blogdt","Twitter","twitdt"),ncol = 2,byrow = TRUE))
+names(temp) <- c("Data","Variable Name")
+kable(temp,caption = "Data Declaration",align = "c")
+```
+
+### loading data:
+
+```{r download_load, warning=FALSE, message=FALSE, cache=TRUE}
+source(paste0(getwd(),'/readfile.R'))
+newsdt <- readData("en_US.news.txt")
+blogdt <- readData("en_US.blogs.txt")
+twitdt <- readData("en_US.twitter.txt")
+
+```
+## 2. Summary statistics about the data sets:
+
+In this part of the report I am caculating the size of the respective files loaded in the workng environment using the "objSize" function written in the supported R file.
+
+```{r summary, warning=FALSE,message=FALSE,cache=TRUE}
+library(knitr)
+tempSize <- as.data.frame(matrix(c("NEWS","BLOGS","TWITTER",
+                                    "objSize(newsdt)","objSize(blogdt)","objSize(twitdt)",
+                                    objSize(newsdt),objSize(blogdt),objSize(twitdt)
+                                  ),
+                                 ncol = 3,
+                                 byrow = FALSE
+                                )
+                         )
+names(tempSize) <- c("DATA","FUNCTION CALL","SIZE")
+kable(tempSize,caption = "Data file size table",align = "c")
+```
+
+Now I will be counting the words and lines in the given documents using the "tokenData" function written in the supported R file.
+
+```{r counting,warning=FALSE,message=FALSE,cache=TRUE}
+library(knitr)
+source(paste0(getwd(),'/readfile.R'))
+newsT1 <- tokenData(newsdt,1)
+blogT1 <- tokenData(blogdt,1)
+twitT1 <- tokenData(twitdt,1)
+newsLine <- tokenData(newsdt,"l")
+blogLine <- tokenData(blogdt,"l")
+twitLine <- tokenData(twitdt,"l")
+
+tempCount <- as.data.frame(matrix(c("NEWS","BLOGS","TWITTER",
+                                    sum(newsT1$n),sum(blogT1$n),sum(twitT1$n),
+                                    nrow(newsLine),nrow(blogLine),nrow(twitLine)
+                                    ),ncol=3,byrow = FALSE))
+names(tempCount) <- c("DATA","Word-Count","Line-Count")
+kable(tempCount,caption = "Word and line count table",align = "c")
+
+
+```
+
+## 3. Basic Plots:
+
+```{r, ploting,warning=FALSE,message=FALSE,cache=TRUE}
+ggplot(newsT1 %>% filter(n>600),aes(wd,n)) + geom_bar(stat = "identity") +
+    labs(title = "Plot: Word Histogram for News", x = "Words", y = "Count")+
+    theme(axis.text.x = element_text(angle = 90, face = "bold", colour = "black"),
+          axis.title.x = element_text(face = "bold",colour = "black"),
+          axis.title.y = element_text(face = "bold",colour = "black"))
+```
+
+
+## 4. Plans for creating a prediction algorith:
+
+I will be using the Katz's back-off generative n-gram language model that estimates the conditional probability of a word given its history in the n-gram. It accomplishes this estimation by backing off through progressively shorter history models under certain conditions. By doing so, the model with the most reliable information about a given history is used to provide the better results.
+
+### NOTE: the supported R file "readfile.R" can be located at https://github.com/Rohit1310/CourseraCapstone
+
+## END..
