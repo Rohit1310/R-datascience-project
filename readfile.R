@@ -31,6 +31,7 @@ objSize <- function(dt){
 tokenData <- function(ch_data, n_val){
   
   ch_data <- stringr::str_replace_all(ch_data,"[0-9]", " ")
+  ch_data <- stringr::str_replace_all(ch_data,"[:punct:]]"," ")
   
   # single words
   if(n_val == 1){
