@@ -1,4 +1,5 @@
 library(sqldf)
+library(stringr)
 
 # Writting the tokenized data to the MYSQLite database 
 setData <- function(gramVal){
@@ -22,9 +23,9 @@ getPred <- function(input){
   n <- length(input)
   
   if(n >= 3 ){
-    base <- paste(input[(n - 2)],
-                  input[(n-1)],
-                  input[n]
+    base <- stringr::str_remove_all(paste(input[(n - 2)],
+                                          input[(n-1)],
+                                          input[n], "'") 
     )
     out <- head((dbGetQuery(conn,
                             sprintf("SELECT DISTINCT predict from token4 where base like '%s'", base)
@@ -33,9 +34,8 @@ getPred <- function(input){
     names(out) <- c("predicted words")
     
   }else if(n == 2 ){
-    base <- paste(input[(n-1)],
-                  input[n]
-    )
+    base <- st_remove_all(paste(input[(n-1)],
+                  input[n]),"'")
     out <- head((dbGetQuery(conn,
                             sprintf("SELECT DISTINCT predict from token3 where base like '%s'", base)
     )),
@@ -44,7 +44,7 @@ getPred <- function(input){
     
   }else if(n == 1 ){
     
-    base <- paste(input[n])
+    base <- stingr::str_remove_all(paste(input[n]),"'")
     out <- head((dbGetQuery(conn,
                             sprintf("SELECT DISTINCT predict from token2 where base like '%s'", base)
     )),
@@ -57,6 +57,9 @@ getPred <- function(input){
   }
   
   dbDisconnect(conn)
+  if(nrow(out) == 0){
+    out <- data.frame("Please enter the words....")
+  }
   return((out))
 }
 

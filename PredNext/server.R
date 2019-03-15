@@ -1,6 +1,7 @@
 library(shiny)
 library(sqldf)
 library(shinyjs)
+library(stringr)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -12,10 +13,10 @@ shinyServer(function(input, output) {
     n <- length(input)
     
     if(n >= 3 ){
-      base <- paste(input[(n - 2)],
+      base <- str_remove_all(paste(input[(n - 2)],
                     input[(n-1)],
                     input[n]
-                    )
+                    ),"'")
       out <- head((dbGetQuery(conn,
                              sprintf("SELECT DISTINCT predict from token4 where base like '%s'", base)
                              )),
@@ -23,9 +24,9 @@ shinyServer(function(input, output) {
       names(out) <- c("predicted words")
       
     }else if(n == 2 ){
-      base <- paste(input[(n-1)],
+      base <- str_remove_all(paste(input[(n-1)],
                     input[n]
-                    )
+                    ),"'")
       out <- head((dbGetQuery(conn,
                              sprintf("SELECT DISTINCT predict from token3 where base like '%s'", base)
                              )),
@@ -34,7 +35,7 @@ shinyServer(function(input, output) {
       
     }else if(n == 1 ){
       
-      base <- paste(input[n])
+      base <- str_remove_all(paste(input[n]),"'")
       out <- head((dbGetQuery(conn,
                              sprintf("SELECT DISTINCT predict from token2 where base like '%s'", base)
                              )),
@@ -47,6 +48,10 @@ shinyServer(function(input, output) {
     }
       
     dbDisconnect(conn)
+    if(nrow(out) == 0){
+      out <- data.frame("Please change the words.... As the corresponding prediction is Not Found ....")
+      names(out) <- c("Notification")
+    }
     return((out))
   }
   
