@@ -16,7 +16,7 @@ The main goal of this capstone project is to build a Shiny application to predic
 The RSQLite database were made from three sources: blogs, news and twitter. Over 300,000 lines were randomly sampled from over 4 million lines of texts to build the text predictive model. 
 The Database, source codes for text mining, exploratory data analysis, model building and this presentation can be found on  <a href="https://github.com/Rohit1310/CourseraCapstone">GitHub</a>.
 
-The R-Shiny App for this Course project is hosted on Shiny server here.
+The R-Shiny App for this Course project is hosted on Shiny server <a href="https://rohaki.shinyapps.io/prednext/">here</a>.
 
 ## How to use the application
 

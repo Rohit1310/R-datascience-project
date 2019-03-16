@@ -4,6 +4,7 @@ library(shinyjs)
 # Define UI for application
 shinyUI(fluidPage(
   useShinyjs(),
+  titlePanel(title = "",windowTitle = "Next Word Prediction"),
   fluidRow(
     column(width = 12,div(
       img(style="display:inline;border-style: solid;padding: 10px;",
